@@ -7,6 +7,7 @@ function App() {
   const [userName, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkPassword, setCheckPassword] = useState("");
 
   async function registerUser(event) {
     event.preventDefault();
@@ -15,6 +16,7 @@ function App() {
       userName,
       email,
       password,
+      checkPassword,
     });
 
     console.log(response);
@@ -45,6 +47,13 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
+          />
+          <br />
+          <input
+            value={checkPassword}
+            onChange={(e) => setCheckPassword(e.target.value)}
+            type="password"
+            placeholder="Confirm your Password"
           />
           <input type="submit" value="Register" />
         </form>
