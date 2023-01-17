@@ -2,20 +2,22 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Requisitions = () => {
-  const [setUsersDB, usersDB] = useState();
+  const [setUsersDB] = useState({});
+
   const getUsers = () => {
     axios
-      .get("http://localhost:3000/user")
+      .get("https://randomuser.me/api/")
       .then((response) => {
-        setUsersDB(response);
+        setUsersDB(response?.data?.info);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
+
   useEffect(() => {
     getUsers();
-  }, [usersDB]);
+  });
 };
 
 export default Requisitions;

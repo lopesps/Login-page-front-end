@@ -1,29 +1,28 @@
 /* import "./App.css";*/
 import { useState } from "react";
-import Requisitions from "../context/Requisitions.js";
 import axios from "axios";
+import "../css/style.css";
+import { useNavigate } from "react-router-dom";
 
-function App() {
+function Login() {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  async function loginUser(event) {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const response = await axios.post("http://localhost:3000/api/login", {
-      userName,
-      password,
-    });
-
-    console.log(response);
-  }
-
+    axios
+      .post("http://localhost:3000/api/login", { userName, password })
+      .then((response) => {})
+      .catch((err) => console.log(err));
+    navigate("/users");
+  };
   return (
     <>
-      <Requisitions />
-      <div>
-        <h1>Login</h1>
-        <form onSubmit={loginUser}>
+      <div className="formContainer">
+        <form onSubmit={handleSubmit}>
+          <h1>Login</h1>
           <input
             value={userName}
             onChange={(e) => setUsername(e.target.value)}
@@ -44,4 +43,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;

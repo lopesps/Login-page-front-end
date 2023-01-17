@@ -1,22 +1,41 @@
 /* import "./App.css";*/
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Requisitions from "../context/Requisitions.js";
 import axios from "axios";
 import "../css/style.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-function Register() {
+function Edit() {
+  const clientId = useParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
   const [client_address, setClient_address] = useState("");
+  const [clients, setClients] = useState("");
   const navigate = useNavigate();
 
-  const registerUser = async (event) => {
-    event.preventDefault();
+  const getClients = (e) => {
+    axios
+      .get("http://localhost:3000/api/clients/" + clientId.userId)
+      .then((response) => {
+        setClients(response.data.client);
+        setName(response.data?.client?.name);
+        setEmail(response.data?.client?.email);
+        setPhone(response.data?.client?.phone);
+        setCpf(response.data?.client?.cpf);
+        setClient_address(response.data?.client?.client_address);
+      })
+      .catch((err) => console.log(err));
+  };
 
-    const response = await axios.post("http://localhost:3000/api/clients", {
+  useEffect(() => {
+    getClients();
+  }, []);
+
+  const editUser = async (event) => {
+    event.preventDefault();
+    await axios.put("http://localhost:3000/api/clients/" + clientId.userId, {
       name,
       email,
       phone,
@@ -30,25 +49,25 @@ function Register() {
   return (
     <>
       <Requisitions />
-      <h1>Add Client</h1>
+      <h1>Edit Client</h1>
       <div className="formContainer">
-        <form onSubmit={registerUser}>
+        <form onSubmit={editUser}>
           <input
-            value={name}
+            defaultValue={clients.name}
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder="Name"
           />
           <br />
           <input
-            value={email}
+            defaultValue={clients.email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email"
           />
           <br />
           <input
-            value={phone}
+            defaultValue={clients.phone}
             onChange={(e) => setPhone(e.target.value)}
             type="tel"
             placeholder="Phone"
@@ -56,24 +75,28 @@ function Register() {
           />
           <br />
           <input
-            value={client_address}
+            defaultValue={clients.client_address}
             onChange={(e) => setClient_address(e.target.value)}
             type="text"
             placeholder="Address"
           />
           <br />
           <input
-            value={cpf}
+            defaultValue={clients.cpf}
             onChange={(e) => setCpf(e.target.value)}
             type="text"
             placeholder="CPF"
             maxLength="11"
           />
-          <input type="submit" value="Register" />
+          <input
+            type="submit"
+            value="Register"
+            /* onClick={() => navigate("/clients")} */
+          />
         </form>
       </div>
     </>
   );
 }
 
-export default Register;
+export default Edit;
